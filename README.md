@@ -26,4 +26,4 @@ LINQ
 Bootstrap 5
 JavaScript / jQuery
 OpenAI API (Yapay zekâ öneri sistemi)
-projeyi yapanlar:    veysel.sahin3@ogr.sakarya.edu.tr      melih.eroz1@ogr.sakarya.edu.tr
+Projeyi yapanlar:    veysel.sahin3@ogr.sakarya.edu.tr      melih.eroz1@ogr.sakarya.edu.tr
