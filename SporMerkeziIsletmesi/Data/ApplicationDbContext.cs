@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SporMerkeziIsletmesi.Models;
 
 namespace SporMerkeziIsletmesi.Data
 {
@@ -9,5 +10,6 @@ namespace SporMerkeziIsletmesi.Data
             : base(options)
         {
         }
+        public DbSet<Salon> Salonlar { get; set; }
     }
 }
