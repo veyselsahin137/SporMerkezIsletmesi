@@ -11,5 +11,6 @@ namespace SporMerkeziIsletmesi.Data
         {
         }
         public DbSet<Salon> Salonlar { get; set; }
+        public DbSet<Hizmet> Hizmetler { get; set; }
     }
 }

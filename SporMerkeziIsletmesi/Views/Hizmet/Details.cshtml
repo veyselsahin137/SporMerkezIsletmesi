@@ -1,0 +1,42 @@
+﻿@model SporMerkeziIsletmesi.Models.Hizmet
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Hizmet</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HizmetAdi)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HizmetAdi)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SureDakika)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SureDakika)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ucret)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ucret)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Salon)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Salon.SalonAdi)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.HizmetID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
