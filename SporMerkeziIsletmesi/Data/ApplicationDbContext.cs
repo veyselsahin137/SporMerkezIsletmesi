@@ -15,5 +15,7 @@ namespace SporMerkeziIsletmesi.Data
 
         public DbSet<Antrenor> Antrenorler { get; set; }
         public DbSet<AntrenorHizmet> AntrenorHizmetler { get; set; }
+        public DbSet<AntrenorMusaitlik> AntrenorMusaitlikler { get; set; }
+
     }
 }
