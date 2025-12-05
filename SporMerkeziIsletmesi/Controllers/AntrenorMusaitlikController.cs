@@ -59,15 +59,36 @@ namespace SporMerkeziIsletmesi.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,AntrenorID,Gun,BaslangicSaati,BitisSaati")] AntrenorMusaitlik antrenorMusaitlik)
         {
+            // 1️⃣ Önce çakışma var mı kontrol et
+            var cakisiyorMu = _context.AntrenorMusaitlikler
+                .Any(m =>
+                    m.AntrenorID == antrenorMusaitlik.AntrenorID &&
+                    m.Gun == antrenorMusaitlik.Gun &&
+                    // Saat aralığı çakışma kontrolü:
+                    m.BaslangicSaati < antrenorMusaitlik.BitisSaati &&
+                    antrenorMusaitlik.BaslangicSaati < m.BitisSaati
+                );
+
+            if (cakisiyorMu)
+            {
+                ModelState.AddModelError(string.Empty, "Bu antrenör için bu gün ve saat aralığında zaten bir müsaitlik kaydı var (çakışma).");
+
+                ViewData["AntrenorID"] = new SelectList(_context.Antrenorler, "AntrenorID", "Ad", antrenorMusaitlik.AntrenorID);
+                return View(antrenorMusaitlik);
+            }
+
+            // 2️⃣ Model diğer validasyonlardan da geçtiyse kaydet
             if (ModelState.IsValid)
             {
                 _context.Add(antrenorMusaitlik);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["AntrenorID"] = new SelectList(_context.Antrenorler, "AntrenorID", "Ad", antrenorMusaitlik.AntrenorID);
             return View(antrenorMusaitlik);
         }
+
 
         // GET: AntrenorMusaitlik/Edit/5
         public async Task<IActionResult> Edit(int? id)
