@@ -1,0 +1,78 @@
+﻿@model SporMerkeziIsletmesi.Models.Uye
+@{
+    ViewData["Title"] = "Profil Düzenle";
+}
+
+<h2 class="mt-4">Profilimi Düzenle</h2>
+
+<form asp-action="Edit" method="post" class="mt-3">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="KullaniciId" />
+
+    <div class="card p-4 shadow-sm">
+
+        <div class="mb-3">
+            <label asp-for="SalonId" class="form-label"></label>
+            <select asp-for="SalonId" class="form-select" asp-items="ViewBag.SalonId"></select>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Yas" class="form-label"></label>
+            <input asp-for="Yas" class="form-control" />
+            <span asp-validation-for="Yas" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Telefon" class="form-label"></label>
+            <input asp-for="Telefon" class="form-control" />
+            <span asp-validation-for="Telefon" class="text-danger"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Boy" class="form-label"></label>
+                <input asp-for="Boy" class="form-control" />
+                <span asp-validation-for="Boy" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Kilo" class="form-label"></label>
+                <input asp-for="Kilo" class="form-control" />
+                <span asp-validation-for="Kilo" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Hedef" class="form-label"></label>
+            <input asp-for="Hedef" class="form-control" />
+            <span asp-validation-for="Hedef" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="AktiviteSeviyesi" class="form-label"></label>
+            <input asp-for="AktiviteSeviyesi" class="form-control" />
+            <span asp-validation-for="AktiviteSeviyesi" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="YagOrani" class="form-label"></label>
+            <input asp-for="YagOrani" class="form-control" />
+            <span asp-validation-for="YagOrani" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="TercihEdilenZaman" class="form-label"></label>
+            <input asp-for="TercihEdilenZaman" class="form-control" />
+            <span asp-validation-for="TercihEdilenZaman" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Kaydet</button>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary ms-2">İptal</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
