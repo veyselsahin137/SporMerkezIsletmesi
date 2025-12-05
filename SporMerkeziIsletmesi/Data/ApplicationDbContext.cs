@@ -18,33 +18,6 @@ namespace SporMerkeziIsletmesi.Data
 
 
         public DbSet<Uye> Uyeler { get; set; }
-        public DbSet<Randevu> Randevular { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-
-            // Randevu → Üye ilişkisi
-            builder.Entity<Randevu>()
-                .HasOne(r => r.Uye)
-                .WithMany()
-                .HasForeignKey(r => r.UyeId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // Randevu → Antrenör ilişkisi
-            builder.Entity<Randevu>()
-                .HasOne(r => r.Antrenor)
-                .WithMany()
-                .HasForeignKey(r => r.AntrenorId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // Randevu → Hizmet ilişkisi
-            builder.Entity<Randevu>()
-                .HasOne(r => r.Hizmet)
-                .WithMany()
-                .HasForeignKey(r => r.HizmetId)
-                .OnDelete(DeleteBehavior.Restrict);
-        }
-
+        
     }
 }

@@ -224,41 +224,6 @@ namespace SporMerkeziIsletmesi.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Randevu", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AntrenorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Durum")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("HizmetId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Tarih")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UyeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AntrenorId");
-
-                    b.HasIndex("HizmetId");
-
-                    b.HasIndex("UyeId");
-
-                    b.ToTable("Randevular");
-                });
-
             modelBuilder.Entity("SporMerkeziIsletmesi.Models.Antrenor", b =>
                 {
                     b.Property<int>("AntrenorID")
@@ -504,33 +469,6 @@ namespace SporMerkeziIsletmesi.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Randevu", b =>
-                {
-                    b.HasOne("SporMerkeziIsletmesi.Models.Antrenor", "Antrenor")
-                        .WithMany()
-                        .HasForeignKey("AntrenorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SporMerkeziIsletmesi.Models.Hizmet", "Hizmet")
-                        .WithMany()
-                        .HasForeignKey("HizmetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SporMerkeziIsletmesi.Models.Uye", "Uye")
-                        .WithMany()
-                        .HasForeignKey("UyeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Antrenor");
-
-                    b.Navigation("Hizmet");
-
-                    b.Navigation("Uye");
                 });
 
             modelBuilder.Entity("SporMerkeziIsletmesi.Models.AntrenorHizmet", b =>
