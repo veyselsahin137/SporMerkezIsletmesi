@@ -17,6 +17,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = true; // istersen false yapabilirsin
 })
+     .AddRoles<IdentityRole>() // Identity rol matığını bilsin diye ekledi(Admin,üye)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();
