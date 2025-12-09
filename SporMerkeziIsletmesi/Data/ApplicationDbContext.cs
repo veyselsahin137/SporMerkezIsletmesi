@@ -18,6 +18,7 @@ namespace SporMerkeziIsletmesi.Data
 
 
         public DbSet<Uye> Uyeler { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
