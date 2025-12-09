@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using SporMerkeziIsletmesi.Models;
 
 namespace SporMerkeziIsletmesi.Controllers
 {
+    [Authorize]
     public class RandevuController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -18,17 +20,22 @@ namespace SporMerkeziIsletmesi.Controllers
             _context = context;
         }
 
-        // ✅ SADECE GİRİŞ YAPAN ÜYENİN RANDEVULARI
+        // ✅ ÜYE SADECE KENDİ RANDEVULARINI GÖRÜR
         public async Task<IActionResult> Index()
         {
-            var kullaniciId = User.Identity?.Name;
+            var kullaniciId = User.Identity!.Name;
+
+            var uye = await _context.Uyeler
+                .FirstOrDefaultAsync(u => u.KullaniciId == kullaniciId);
+
+            if (uye == null)
+                return NotFound("Üye bulunamadı");
 
             var randevular = await _context.Randevu
                 .Include(r => r.Antrenor)
                 .Include(r => r.Hizmet)
-                .Include(r => r.Uye)
-                .Where(r => r.Uye.KullaniciId == kullaniciId)
-                .OrderByDescending(r => r.Tarih)
+                .Where(r => r.UyeId == uye.Id)
+                .OrderBy(r => r.Tarih)
                 .ToListAsync();
 
             return View(randevular);
@@ -42,24 +49,24 @@ namespace SporMerkeziIsletmesi.Controllers
             return View();
         }
 
-        // ✅ RANDEVU KAYDET (ÇAKIŞMA KONTROLLÜ)
+        // ✅ RANDEVU KAYDETME
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Randevu randevu)
         {
-            var kullaniciId = User.Identity?.Name;
+            var kullaniciId = User.Identity!.Name;
 
             var uye = await _context.Uyeler
                 .FirstOrDefaultAsync(u => u.KullaniciId == kullaniciId);
 
             if (uye == null)
-            {
-                return Unauthorized();
-            }
+                return NotFound("Üye bulunamadı");
 
+            // 🔒 UyeId otomatik bağlanıyor
             randevu.UyeId = uye.Id;
             randevu.Durum = "Beklemede";
 
+            // ⛔ ÇAKIŞMA KONTROLÜ
             bool cakismaVarMi = await _context.Randevu.AnyAsync(r =>
                 r.AntrenorId == randevu.AntrenorId &&
                 r.Tarih == randevu.Tarih
@@ -70,17 +77,17 @@ namespace SporMerkeziIsletmesi.Controllers
                 ModelState.AddModelError("", "Bu tarih ve saatte antrenörün başka bir randevusu var.");
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Randevu.Add(randevu);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ViewData["AntrenorId"] = new SelectList(_context.Antrenorler, "AntrenorID", "Ad", randevu.AntrenorId);
+                ViewData["HizmetId"] = new SelectList(_context.Hizmetler, "HizmetID", "HizmetAdi", randevu.HizmetId);
+                return View(randevu);
             }
 
-            ViewData["AntrenorId"] = new SelectList(_context.Antrenorler, "AntrenorID", "Ad", randevu.AntrenorId);
-            ViewData["HizmetId"] = new SelectList(_context.Hizmetler, "HizmetID", "HizmetAdi", randevu.HizmetId);
+            _context.Randevu.Add(randevu);
+            await _context.SaveChangesAsync();
 
-            return View(randevu);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
