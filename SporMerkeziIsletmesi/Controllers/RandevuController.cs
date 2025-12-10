@@ -84,7 +84,7 @@ namespace SporMerkeziIsletmesi.Controllers
 
             // 🔁 Hizmete göre tekrar antrenör doldur
             var antrenorler = _context.AntrenorHizmetler
-                .Where(x => x.HizmetId == randevu.HizmetId)
+                .Where(x => x.HizmetID == randevu.HizmetId)
                 .Select(x => x.Antrenor)
                 .Distinct()
                 .ToList();
@@ -98,7 +98,7 @@ namespace SporMerkeziIsletmesi.Controllers
         public JsonResult HizmeteGoreAntrenorGetir(int hizmetId)
         {
             var antrenorler = _context.AntrenorHizmetler
-                .Where(x => x.HizmetId == hizmetId)
+                .Where(x => x.HizmetID == hizmetId)
                 .Select(x => new
                 {
                     x.Antrenor.AntrenorID,

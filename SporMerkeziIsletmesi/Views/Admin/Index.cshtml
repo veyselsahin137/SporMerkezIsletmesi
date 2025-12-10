@@ -1,14 +1,68 @@
 ﻿@{
-    ViewData["Title"] = "Admin Paneli";
+    ViewData["Title"] = "Yönetim Paneli";
 }
 
-<h2>Admin Paneli</h2>
-<hr />
+<div class="container mt-4">
+    <h2 class="mb-4">Yönetim Paneli</h2>
 
-<ul>
-    <li><a asp-controller="Salon" asp-action="Index">Salon Yönetimi</a></li>
-    <li><a asp-controller="Hizmet" asp-action="Index">Hizmet Yönetimi</a></li>
-    <li><a asp-controller="Antrenor" asp-action="Index">Antrenör Yönetimi</a></li>
-    <li><a asp-controller="AntrenorMusaitlik" asp-action="Index">Antrenör Müsaitlikleri</a></li>
-    <li><a asp-controller="AntrenorHizmet" asp-action="Index">Antrenör-Hizmet İlişkileri</a></li>
-</ul>
+    <div class="row g-3">
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Salon Yönetimi</h5>
+                    <p class="card-text flex-grow-1">
+                        Spor salonu kayıtlarını ekle, düzenle, sil.
+                    </p>
+                    <a asp-controller="Salon" asp-action="Index" class="btn btn-primary mt-auto">
+                        Salonları Yönet
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Hizmet Yönetimi</h5>
+                    <p class="card-text flex-grow-1">
+                        Fitness, yoga, pilates gibi hizmetleri yönet.
+                    </p>
+                    <a asp-controller="Hizmet" asp-action="Index" class="btn btn-primary mt-auto">
+                        Hizmetleri Yönet
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Antrenör Yönetimi</h5>
+                    <p class="card-text flex-grow-1">
+                        Antrenör bilgilerini ve aktiflik durumlarını düzenle.
+                    </p>
+                    <a asp-controller="Antrenor" asp-action="Index" class="btn btn-primary mt-auto">
+                        Antrenörleri Yönet
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">İlişkiler & Müsaitlik</h5>
+                    <p class="card-text flex-grow-1">
+                        Antrenör-hizmet ilişkileri ve müsaitlik saatleri.
+                    </p>
+                    <a asp-controller="AntrenorHizmet" asp-action="Index" class="btn btn-outline-primary mb-2">
+                        Antrenör-Hizmet
+                    </a>
+                    <a asp-controller="AntrenorMusaitlik" asp-action="Index" class="btn btn-outline-primary">
+                        Müsaitlik Saatleri
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

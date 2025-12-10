@@ -25,7 +25,51 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+
+                        @*  Sadece Admin rolündeki kullanıcılar bu menüyü görsün *@
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown"
+                                   role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Admin Paneli
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Index">
+                                            Yönetim Ana Sayfa
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Salon" asp-action="Index">
+                                            Salon Yönetimi
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Hizmet" asp-action="Index">
+                                            Hizmet Yönetimi
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Antrenor" asp-action="Index">
+                                            Antrenör Yönetimi
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="AntrenorHizmet" asp-action="Index">
+                                            Antrenör-Hizmet
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="AntrenorMusaitlik" asp-action="Index">
+                                            Antrenör Müsaitlikleri
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
                     </ul>
+
                     <partial name="_LoginPartial" />
                 </div>
             </div>
