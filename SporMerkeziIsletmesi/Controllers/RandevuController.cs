@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,59 +12,57 @@ namespace SporMerkeziIsletmesi.Controllers
     public class RandevuController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public RandevuController(ApplicationDbContext context)
+        public RandevuController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        // ✅ ÜYE SADECE KENDİ RANDEVULARINI GÖRÜR
+        // ✅ ÜYENİN SADECE KENDİ RANDEVULARI
         public async Task<IActionResult> Index()
         {
-            var kullaniciId = User.Identity!.Name;
+            var userId = _userManager.GetUserId(User);
 
-            var uye = await _context.Uyeler
-                .FirstOrDefaultAsync(u => u.KullaniciId == kullaniciId);
-
+            var uye = await _context.Uyeler.FirstOrDefaultAsync(u => u.KullaniciId == userId);
             if (uye == null)
-                return NotFound("Üye bulunamadı");
+                return Unauthorized();
 
             var randevular = await _context.Randevu
                 .Include(r => r.Antrenor)
                 .Include(r => r.Hizmet)
                 .Where(r => r.UyeId == uye.Id)
-                .OrderBy(r => r.Tarih)
+                .OrderByDescending(r => r.Tarih)
                 .ToListAsync();
 
             return View(randevular);
         }
 
-        // ✅ RANDEVU OLUŞTURMA SAYFASI
+        // ✅ CREATE (GET)
         public IActionResult Create()
         {
-            ViewData["AntrenorId"] = new SelectList(_context.Antrenorler, "AntrenorID", "Ad");
-            ViewData["HizmetId"] = new SelectList(_context.Hizmetler, "HizmetID", "HizmetAdi");
+            ViewBag.Hizmetler = new SelectList(_context.Hizmetler, "HizmetID", "HizmetAdi");
+            ViewBag.Antrenorler = new SelectList(Enumerable.Empty<SelectListItem>());
             return View();
         }
 
-        // ✅ RANDEVU KAYDETME
+        // ✅ CREATE (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Randevu randevu)
         {
-            var kullaniciId = User.Identity!.Name;
-
-            var uye = await _context.Uyeler
-                .FirstOrDefaultAsync(u => u.KullaniciId == kullaniciId);
+            var userId = _userManager.GetUserId(User);
+            var uye = await _context.Uyeler.FirstOrDefaultAsync(u => u.KullaniciId == userId);
 
             if (uye == null)
-                return NotFound("Üye bulunamadı");
+                return Unauthorized();
 
-            // 🔒 UyeId otomatik bağlanıyor
+            // 🔒 Üye otomatik bağlanır
             randevu.UyeId = uye.Id;
             randevu.Durum = "Beklemede";
 
-            // ⛔ ÇAKIŞMA KONTROLÜ
+            // ❌ ÇAKIŞMA KONTROLÜ
             bool cakismaVarMi = await _context.Randevu.AnyAsync(r =>
                 r.AntrenorId == randevu.AntrenorId &&
                 r.Tarih == randevu.Tarih
@@ -77,17 +73,41 @@ namespace SporMerkeziIsletmesi.Controllers
                 ModelState.AddModelError("", "Bu tarih ve saatte antrenörün başka bir randevusu var.");
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                ViewData["AntrenorId"] = new SelectList(_context.Antrenorler, "AntrenorID", "Ad", randevu.AntrenorId);
-                ViewData["HizmetId"] = new SelectList(_context.Hizmetler, "HizmetID", "HizmetAdi", randevu.HizmetId);
-                return View(randevu);
+                _context.Randevu.Add(randevu);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
 
-            _context.Randevu.Add(randevu);
-            await _context.SaveChangesAsync();
+            ViewBag.Hizmetler = new SelectList(_context.Hizmetler, "HizmetID", "HizmetAdi", randevu.HizmetId);
 
-            return RedirectToAction(nameof(Index));
+            // 🔁 Hizmete göre tekrar antrenör doldur
+            var antrenorler = _context.AntrenorHizmetler
+                .Where(x => x.HizmetId == randevu.HizmetId)
+                .Select(x => x.Antrenor)
+                .Distinct()
+                .ToList();
+
+            ViewBag.Antrenorler = new SelectList(antrenorler, "AntrenorID", "Ad", randevu.AntrenorId);
+
+            return View(randevu);
+        }
+
+        // ✅ AJAX – HİZMETE GÖRE ANTRENÖR GETİR
+        public JsonResult HizmeteGoreAntrenorGetir(int hizmetId)
+        {
+            var antrenorler = _context.AntrenorHizmetler
+                .Where(x => x.HizmetId == hizmetId)
+                .Select(x => new
+                {
+                    x.Antrenor.AntrenorID,
+                    x.Antrenor.Ad
+                })
+                .Distinct()
+                .ToList();
+
+            return Json(antrenorler);
         }
     }
 }

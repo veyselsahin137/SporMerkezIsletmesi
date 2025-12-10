@@ -1,5 +1,4 @@
 ﻿@model SporMerkeziIsletmesi.Models.Randevu
-
 @{
     ViewData["Title"] = "Yeni Randevu";
 }
@@ -7,30 +6,50 @@
 <h2>Yeni Randevu Al</h2>
 
 <form asp-action="Create" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div class="mb-3">
-        <label asp-for="AntrenorId" class="form-label">Antrenör</label>
-        <select asp-for="AntrenorId" class="form-select" asp-items="ViewBag.AntrenorId"></select>
+    <div class="form-group mb-3">
+        <label>Hizmet</label>
+        <select asp-for="HizmetId" class="form-control" id="HizmetSelect"
+                asp-items="ViewBag.Hizmetler">
+            <option value="">Hizmet Seçiniz</option>
+        </select>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="HizmetId" class="form-label">Hizmet</label>
-        <select asp-for="HizmetId" class="form-select" asp-items="ViewBag.HizmetId"></select>
+    <div class="form-group mb-3">
+        <label>Antrenör</label>
+        <select asp-for="AntrenorId" class="form-control" id="AntrenorSelect">
+            <option value="">Önce hizmet seçiniz</option>
+        </select>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="Tarih" class="form-label">Tarih / Saat</label>
+    <div class="form-group mb-3">
+        <label>Tarih ve Saat</label>
         <input asp-for="Tarih" type="datetime-local" class="form-control" />
         <span asp-validation-for="Tarih" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-success">Randevu Al</button>
-    <a asp-action="Index" class="btn btn-secondary ms-2">İptal</a>
+    <button type="submit" class="btn btn-success">Randevu Oluştur</button>
 </form>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $("#HizmetSelect").change(function () {
+            var hizmetId = $(this).val();
+
+            $("#AntrenorSelect").empty();
+
+            if (hizmetId) {
+                $.get("/Randevu/HizmeteGoreAntrenorGetir", { hizmetId: hizmetId }, function (data) {
+                    $("#AntrenorSelect").append('<option value="">Antrenör Seçiniz</option>');
+                    $.each(data, function (i, antrenor) {
+                        $("#AntrenorSelect").append(
+                            `<option value="${antrenor.antrenorID}">${antrenor.ad}</option>`
+                        );
+                    });
+                });
+            }
+        });
+    </script>
 }
