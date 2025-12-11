@@ -1,0 +1,45 @@
+﻿@model SporMerkeziIsletmesi.Models.Uye
+
+<h2>Profil Bilgilerim</h2>
+
+<form asp-action="Profilim" method="post">
+
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label>Ad</label>
+        <input asp-for="Ad" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Soyad</label>
+        <input asp-for="Soyad" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Telefon</label>
+        <input asp-for="Telefon" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Yaş</label>
+        <input asp-for="Yas" class="form-control" type="number" />
+    </div>
+
+    <div class="mb-3">
+        <label>Boy</label>
+        <input asp-for="Boy" class="form-control" type="number" />
+    </div>
+
+    <div class="mb-3">
+        <label>Kilo</label>
+        <input asp-for="Kilo" class="form-control" type="number" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+
+    @if (ViewBag.Mesaj != null)
+    {
+        <div class="alert alert-success mt-3">@ViewBag.Mesaj</div>
+    }
+</form>

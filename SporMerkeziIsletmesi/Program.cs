@@ -95,7 +95,7 @@ using (var scope = app.Services.CreateScope())
     }
 
     // 4) İKİ ADMIN HESABI OLUŞTUR
-    await EnsureAdminUser("B221210400"); //  Ben
+    await EnsureAdminUser("B221210400"); //  Melih
     await EnsureAdminUser("B211210382"); //  Veysel
 }
 
@@ -118,6 +118,8 @@ app.UseRouting();
 // Identity için şart
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers();
 
 app.MapControllerRoute(
     name: "default",

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SporMerkeziIsletmesi.Data;
 
@@ -11,9 +12,11 @@ using SporMerkeziIsletmesi.Data;
 namespace SporMerkeziIsletmesi.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251211110044_FixMusaitlikSaatColumn")]
+    partial class FixMusaitlikSaatColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -360,6 +363,9 @@ namespace SporMerkeziIsletmesi.Data.Migrations
                     b.Property<int>("HizmetId")
                         .HasColumnType("int");
 
+                    b.Property<TimeSpan>("Saat")
+                        .HasColumnType("time");
+
                     b.Property<DateTime>("Tarih")
                         .HasColumnType("datetime2");
 
@@ -413,44 +419,34 @@ namespace SporMerkeziIsletmesi.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Ad")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("AktiviteSeviyesi")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Boy")
                         .HasColumnType("int");
 
                     b.Property<string>("Hedef")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Kilo")
                         .HasColumnType("int");
 
                     b.Property<string>("KullaniciId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SalonId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Soyad")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("Telefon")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TercihEdilenZaman")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<float?>("YagOrani")
                         .HasColumnType("real");

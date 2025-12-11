@@ -14,7 +14,7 @@
         public Hizmet Hizmet { get; set; }
 
         public DateTime Tarih { get; set; }
-        public TimeSpan Saat { get; set; }
+        
 
         public string Durum { get; set; }
 

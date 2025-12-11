@@ -1,109 +1,125 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
 using SporMerkeziIsletmesi.Data;
 using SporMerkeziIsletmesi.Models;
 
 namespace SporMerkeziIsletmesi.Controllers
 {
-    [Authorize] // Giriş yapan kullanıcı zorunlu
+    [Authorize]
     public class UyeController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public UyeController(ApplicationDbContext context)
+        public UyeController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        // ------------------------------------------------------
-        //   PROFİLİM  (Üyenin kendi profilini görmesi)
-        // ------------------------------------------------------
+        // --------------------------------------------------------------
+        // 1) Üye Profilim sayfası (varsa düzenleme, yoksa oluşturma)
+        // --------------------------------------------------------------
         public async Task<IActionResult> Profilim()
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-
-            if (userId == null)
-                return Unauthorized();
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
 
             var uye = await _context.Uyeler
-                .Include(u => u.Salon)
-                .FirstOrDefaultAsync(u => u.KullaniciId == userId);
+                .Include(x => x.Salon)
+                .FirstOrDefaultAsync(u => u.KullaniciId == user.Id);
 
             if (uye == null)
-                return NotFound();
+                return RedirectToAction("Create");
 
-            return View("Details", uye);
+            return View("Edit", uye);
         }
 
-        // ------------------------------------------------------
-        //   PROFİLİ DÜZENLE (Sadece kendini düzenleyebilir)
-        // ------------------------------------------------------
-        public async Task<IActionResult> Edit()
+        // --------------------------------------------------------------
+        // 2) Yeni Üye Profili Oluşturma (Register sonrası ilk girişte)
+        // --------------------------------------------------------------
+        [HttpGet]
+        public async Task<IActionResult> Create()
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var user = await _userManager.GetUserAsync(User);
 
-            var uye = await _context.Uyeler
-                .FirstOrDefaultAsync(u => u.KullaniciId == userId);
+            // Zaten profili varsa direkt düzenlemeye at
+            var mevcut = await _context.Uyeler.FirstOrDefaultAsync(u => u.KullaniciId == user.Id);
+            if (mevcut != null)
+                return RedirectToAction("Edit", new { id = mevcut.Id });
 
+            ViewData["SalonId"] = new SelectList(_context.Salonlar, "Id", "Ad");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Uye uye)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            // Identity User ID eşleştirmesi
+            uye.KullaniciId = user.Id;
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(uye);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Profilim");
+            }
+
+            ViewData["SalonId"] = new SelectList(_context.Salonlar, "Id", "Ad", uye.SalonId);
+            return View(uye);
+        }
+
+        // --------------------------------------------------------------
+        // 3) Üye Bilgileri Güncelleme
+        // --------------------------------------------------------------
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var uye = await _context.Uyeler.FindAsync(id);
             if (uye == null)
                 return NotFound();
 
-            ViewData["SalonId"] = new SelectList(_context.Salonlar, "SalonID", "SalonAdi", uye.SalonId);
+            ViewData["SalonId"] = new SelectList(_context.Salonlar, "Id", "Ad", uye.SalonId);
             return View(uye);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("Id,KullaniciId,SalonId,Yas,Telefon,Boy,Kilo,Hedef,AktiviteSeviyesi,YagOrani,TercihEdilenZaman")] Uye form)
+        public async Task<IActionResult> Edit(int id, Uye uye)
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (id != uye.Id)
+                return NotFound();
 
-            var uye = await _context.Uyeler
-                .FirstOrDefaultAsync(u => u.Id == form.Id && u.KullaniciId == userId);
+            var user = await _userManager.GetUserAsync(User);
+            uye.KullaniciId = user.Id;
 
-            if (uye == null)
-                return Unauthorized();
-
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                ViewData["SalonId"] = new SelectList(_context.Salonlar, "SalonID", "SalonAdi", form.SalonId);
-                return View(form);
+                try
+                {
+                    _context.Update(uye);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.Uyeler.Any(e => e.Id == uye.Id))
+                        return NotFound();
+                    else
+                        throw;
+                }
+
+                return RedirectToAction("Profilim");
             }
 
-            // Güncelleme
-            uye.SalonId = form.SalonId;
-            uye.Yas = form.Yas;
-            uye.Telefon = form.Telefon;
-            uye.Boy = form.Boy;
-            uye.Kilo = form.Kilo;
-            uye.Hedef = form.Hedef;
-            uye.AktiviteSeviyesi = form.AktiviteSeviyesi;
-            uye.YagOrani = form.YagOrani;
-            uye.TercihEdilenZaman = form.TercihEdilenZaman;
-
-            _context.Update(uye);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Profilim));
+            ViewData["SalonId"] = new SelectList(_context.Salonlar, "Id", "Ad", uye.SalonId);
+            return View(uye);
         }
-
-        // ------------------------------------------------------
-        //   Listeleme kapalı — sadece Profilim ekranı kullanılacak
-        // ------------------------------------------------------
-        public IActionResult Index()
-        {
-            return RedirectToAction(nameof(Profilim));
-        }
-
-        // ------------------------------------------------------
-        //   Create / Delete devre dışı (Identity zaten oluşturuyor)
-        // ------------------------------------------------------
-        public IActionResult Delete() => Unauthorized();
     }
 }
