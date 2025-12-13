@@ -1,36 +1,48 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SporMerkeziIsletmesi</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SporMerkeziIsletmesi.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="bg-light d-flex flex-column min-vh-100">
+    <!-- Üst koyu şerit (Navbar) -->
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SporMerkeziIsletmesi</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark shadow-sm">
+            <div class="container">
+                <!-- Logo + İsim -->
+                <a class="navbar-brand fw-bold d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="me-2">🏋️‍♀️</span>
+                    <span>Spor Merkezi</span>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">
+                                Ana Sayfa
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                Hakkında & İletişim
+                            </a>
                         </li>
 
                         @*  Sadece Admin rolündeki kullanıcılar bu menüyü görsün *@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown"
+                                <a class="nav-link dropdown-toggle text-light" href="#" id="adminDropdown"
                                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Admin Paneli
                                 </a>
@@ -80,17 +92,42 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <!-- Sayfa içeriği -->
+    <div class="container mt-4 flex-grow-1">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <!-- Alt koyu şerit (Footer) -->
+    <footer class="mt-auto py-3 bg-dark text-light border-top">
         <div class="container">
-            &copy; 2025 - SporMerkeziIsletmesi - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row small">
+                <div class="col-md-4 mb-2 mb-md-0">
+                    <strong>Spor Merkezi İşletmesi</strong>
+                    <div class="text-muted">
+                        © 2025 Tüm hakları saklıdır.
+                    </div>
+                </div>
+                <div class="col-md-4 mb-2 mb-md-0">
+                    <div><strong>Hızlı Bağlantılar</strong></div>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="text-decoration-none text-light d-block">
+                        Ana Sayfa
+                    </a>
+                    <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-decoration-none text-light d-block">
+                        Hakkında & İletişim
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <div><strong>İletişim</strong></div>
+                    <div>Telefon: 0 (264) 000 00 00</div>
+                    <div>E-posta: info@spormerkezi.com</div>
+                </div>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
