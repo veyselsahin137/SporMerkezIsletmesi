@@ -26,19 +26,31 @@
                 </button>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <!-- 🔹 MENÜ (burayı güncelledik) -->
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">
                                 Ana Sayfa
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">
-                                Hakkında & İletişim
+                                Hakkında &amp; İletişim
                             </a>
                         </li>
 
-                        @*  Sadece Admin rolündeki kullanıcılar bu menüyü görsün *@
+                        @* Giriş yapmış HERKES (Admin + Üye) yapay zekâ sayfasını görebilsin *@
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-warning" asp-controller="YapayZeka" asp-action="Oneri">
+                                    Yapay Zekâ Öneri
+                                </a>
+                            </li>
+                        }
+
+                        @*  Sadece Admin rolündeki kullanıcılar Admin Paneli dropdown'unu görsün *@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown">
@@ -106,7 +118,6 @@
             <div class="row small">
                 <div class="col-md-4 mb-2 mb-md-0">
                     <strong>Spor Merkezi İşletmesi</strong>
-                    
                 </div>
                 <div class="col-md-4 mb-2 mb-md-0">
                     <div><strong>Hızlı Bağlantılar</strong></div>
@@ -114,7 +125,7 @@
                         Ana Sayfa
                     </a>
                     <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-decoration-none text-light d-block">
-                        Hakkında & İletişim
+                        Hakkında &amp; İletişim
                     </a>
                 </div>
                 <div class="col-md-4">

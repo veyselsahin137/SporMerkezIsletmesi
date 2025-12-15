@@ -29,6 +29,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     .AddRoles<IdentityRole>() // Admin / Uye gibi rolleri desteklesin
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+// 🔹 YapayZekaController içinde kullandığımız IHttpClientFactory için
+builder.Services.AddHttpClient();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -79,14 +82,9 @@ using (var scope = app.Services.CreateScope())
             {
                 await userManager.AddToRoleAsync(user, adminRoleName);
             }
-            else
-            {
-                // İstersen burada log veya breakpoint ile createResult.Errors'a bakabilirsin
-            }
         }
         else
         {
-            // Kullanıcı zaten varsa ve Admin rolünde değilse, Admin rolüne ekle
             if (!await userManager.IsInRoleAsync(user, adminRoleName))
             {
                 await userManager.AddToRoleAsync(user, adminRoleName);

@@ -1,0 +1,67 @@
+﻿@model SporMerkeziIsletmesi.Models.YapayZekaOneriViewModel
+
+@{
+    ViewData["Title"] = "Yapay Zekâ Egzersiz Önerisi";
+}
+
+<div class="container py-4">
+    <h2 class="mb-3">Yapay Zekâ ile Egzersiz Önerisi</h2>
+    <p class="text-muted">
+        Boy, kilo ve hedefini gir; sistem OpenAI API üzerinden sana özel kısa bir egzersiz planı önerisi oluştursun.
+    </p>
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Oneri" method="post">
+                <div class="mb-3">
+                    <label asp-for="BoyCm" class="form-label"></label>
+                    <input asp-for="BoyCm" class="form-control" />
+                    <span asp-validation-for="BoyCm" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="KiloKg" class="form-label"></label>
+                    <input asp-for="KiloKg" class="form-control" />
+                    <span asp-validation-for="KiloKg" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Hedef" class="form-label"></label>
+                    <input asp-for="Hedef" class="form-control" placeholder="Örn: Kilo vermek, kas yapmak" />
+                    <span asp-validation-for="Hedef" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="EkBilgi" class="form-label"></label>
+                    <textarea asp-for="EkBilgi" class="form-control" rows="3"
+                              placeholder="Örn: Diz sakatlığım var, koşu yapamıyorum."></textarea>
+                    <span asp-validation-for="EkBilgi" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Öneri Oluştur
+                </button>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            <h4 class="mt-4 mt-md-0">Yapay Zekâ Cevabı</h4>
+            @if (!string.IsNullOrWhiteSpace(Model?.YapayZekaCevap))
+            {
+                <div class="alert alert-success mt-2" style="white-space: pre-line;">
+                    @Model.YapayZekaCevap
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-secondary mt-2">
+                    Henüz bir öneri oluşturulmadı. Formu doldurup gönderdiğinde burada göreceksin.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
