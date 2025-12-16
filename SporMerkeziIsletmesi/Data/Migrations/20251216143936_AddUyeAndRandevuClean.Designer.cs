@@ -12,8 +12,8 @@ using SporMerkeziIsletmesi.Data;
 namespace SporMerkeziIsletmesi.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251206074549_RandevuIlkKurulum")]
-    partial class RandevuIlkKurulum
+    [Migration("20251216143936_AddUyeAndRandevuClean")]
+    partial class AddUyeAndRandevuClean
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -353,31 +353,14 @@ namespace SporMerkeziIsletmesi.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AntrenorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Durum")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("HizmetId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Tarih")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("UyeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AntrenorId");
-
-                    b.HasIndex("HizmetId");
-
                     b.HasIndex("UyeId");
 
-                    b.ToTable("Randevu");
+                    b.ToTable("Randevular");
                 });
 
             modelBuilder.Entity("SporMerkeziIsletmesi.Models.Salon", b =>
@@ -416,44 +399,28 @@ namespace SporMerkeziIsletmesi.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AktiviteSeviyesi")
+                    b.Property<string>("Ad")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("Boy")
+                    b.Property<int?>("Boy")
                         .HasColumnType("int");
 
-                    b.Property<string>("Hedef")
+                    b.Property<string>("IdentityUserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Kilo")
+                    b.Property<int?>("Kilo")
                         .HasColumnType("int");
 
-                    b.Property<string>("KullaniciId")
+                    b.Property<string>("Soyad")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SalonId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Telefon")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TercihEdilenZaman")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<float?>("YagOrani")
-                        .HasColumnType("real");
-
-                    b.Property<int>("Yas")
-                        .HasColumnType("int");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SalonId");
 
                     b.ToTable("Uyeler");
                 });
@@ -552,40 +519,18 @@ namespace SporMerkeziIsletmesi.Data.Migrations
 
             modelBuilder.Entity("SporMerkeziIsletmesi.Models.Randevu", b =>
                 {
-                    b.HasOne("SporMerkeziIsletmesi.Models.Antrenor", "Antrenor")
-                        .WithMany()
-                        .HasForeignKey("AntrenorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("SporMerkeziIsletmesi.Models.Hizmet", "Hizmet")
-                        .WithMany()
-                        .HasForeignKey("HizmetId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("SporMerkeziIsletmesi.Models.Uye", "Uye")
-                        .WithMany()
+                        .WithMany("Randevular")
                         .HasForeignKey("UyeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Antrenor");
-
-                    b.Navigation("Hizmet");
 
                     b.Navigation("Uye");
                 });
 
             modelBuilder.Entity("SporMerkeziIsletmesi.Models.Uye", b =>
                 {
-                    b.HasOne("SporMerkeziIsletmesi.Models.Salon", "Salon")
-                        .WithMany()
-                        .HasForeignKey("SalonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Salon");
+                    b.Navigation("Randevular");
                 });
 #pragma warning restore 612, 618
         }

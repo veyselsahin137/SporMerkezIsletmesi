@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using SporMerkeziIsletmesi.Data;
+using SporMerkeziIsletmesi.Models;
+
 
 namespace SporMerkeziIsletmesi.Areas.Identity.Pages.Account
 {
@@ -28,21 +31,24 @@ namespace SporMerkeziIsletmesi.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly ApplicationDbContext _context;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _userStore = userStore;
-            _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
+
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -63,6 +69,14 @@ namespace SporMerkeziIsletmesi.Areas.Identity.Pages.Account
             [DataType(DataType.Password)]
             [Display(Name = "Şifre")]
             public string Password { get; set; }
+
+            [Required]
+            [Display(Name = "Ad")]
+            public string Ad { get; set; } = null!;
+
+            [Required]
+            [Display(Name = "Soyad")]
+            public string Soyad { get; set; } = null!;
 
             [DataType(DataType.Password)]
             [Display(Name = "Şifreyi Doğrulayın")]
@@ -88,17 +102,26 @@ namespace SporMerkeziIsletmesi.Areas.Identity.Pages.Account
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                //user.Email = Input.Email;
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("Yeni kullanıcı hesabı oluşturuldu.");
+                    var uye = new Uye
+                    {
+                        Ad = Input.Ad,
+                        Soyad = Input.Soyad,
+                        IdentityUserId = user.Id
+                    };
+
+                    _context.Uyeler.Add(uye);
+                    await _context.SaveChangesAsync();
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect(returnUrl);
+                    return RedirectToAction("Index", "Home");
                 }
+
 
                 foreach (var error in result.Errors)
                     ModelState.AddModelError(string.Empty, error.Description);

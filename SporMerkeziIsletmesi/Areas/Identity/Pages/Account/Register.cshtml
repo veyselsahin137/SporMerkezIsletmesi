@@ -35,6 +35,18 @@
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
 
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Ad" class="form-control" />
+                <label asp-for="Input.Ad"></label>
+                <span asp-validation-for="Input.Ad" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Soyad" class="form-control" />
+                <label asp-for="Input.Soyad"></label>
+                <span asp-validation-for="Input.Soyad" class="text-danger"></span>
+            </div>
+
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">
                 Register
             </button>

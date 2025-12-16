@@ -1,24 +1,17 @@
-﻿namespace SporMerkeziIsletmesi.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SporMerkeziIsletmesi.Models
 {
     public class Randevu
     {
+        [Key]
         public int Id { get; set; }
 
+        [Required]
         public int UyeId { get; set; }
-        public Uye Uye { get; set; }
 
-        public int AntrenorId { get; set; }
-        public Antrenor Antrenor { get; set; }
-
-        public int HizmetId { get; set; }
-        public Hizmet Hizmet { get; set; }
-
-        public DateTime Tarih { get; set; }
-        
-
-        public string Durum { get; set; }
-
-     
-
+        [ForeignKey(nameof(UyeId))]
+        public Uye Uye { get; set; } = null!;
     }
 }
