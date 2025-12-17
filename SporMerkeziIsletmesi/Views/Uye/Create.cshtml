@@ -1,0 +1,30 @@
+﻿@model SporMerkeziIsletmesi.Models.Uye
+
+<h2>Yeni Üye Ekle</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="Ad"></label>
+        <input asp-for="Ad" class="form-control" />
+        <span asp-validation-for="Ad" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Soyad"></label>
+        <input asp-for="Soyad" class="form-control" />
+        <span asp-validation-for="Soyad" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Boy"></label>
+        <input asp-for="Boy" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Kilo"></label>
+        <input asp-for="Kilo" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Kaydet</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SporMerkeziIsletmesi.Models;
 
@@ -25,9 +26,34 @@ namespace SporMerkeziIsletmesi.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Uye>()
-                .Property(x => x.IdentityUserId)
-                .HasMaxLength(450);
+            // === UYE ===
+            builder.Entity<Uye>(entity =>
+            {
+                entity.ToTable("Uyeler");
+
+                // AspNetUsers.Id = nvarchar(450) => FK alanı da 450 olmalı
+                entity.Property(u => u.IdentityUserId)
+                      .IsRequired()
+                      .HasMaxLength(450);
+
+                // Navigation yok (modelde IdentityUser property yok) -> generic HasOne ile kur
+                entity.HasOne<IdentityUser>()
+                      .WithMany()
+                      .HasForeignKey(u => u.IdentityUserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // === RANDEVU ===
+            builder.Entity<Randevu>(entity =>
+            {
+                entity.ToTable("Randevular");
+
+                entity.HasOne(r => r.Uye)
+                      .WithMany() // Uye içinde Randevular koleksiyonu yoksa böyle kalmalı
+                      .HasForeignKey(r => r.UyeId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
         }
 
 

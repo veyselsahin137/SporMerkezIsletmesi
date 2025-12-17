@@ -1,0 +1,29 @@
+﻿@model IEnumerable<SporMerkeziIsletmesi.Models.Uye>
+
+<h2>Üye Listesi</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Yeni Üye Ekle</a>
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Ad</th>
+            <th>Soyad</th>
+            <th>Boy</th>
+            <th>Kilo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var uye in Model)
+        {
+            <tr>
+                <td>@uye.Ad</td>
+                <td>@uye.Soyad</td>
+                <td>@uye.Boy</td>
+                <td>@uye.Kilo</td>
+            </tr>
+        }
+    </tbody>
+</table>

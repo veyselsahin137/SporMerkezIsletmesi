@@ -1,0 +1,49 @@
+﻿@model IEnumerable<SporMerkeziIsletmesi.Models.Randevu>
+
+@{
+    ViewData["Title"] = "Randevular";
+}
+
+<h2>Randevu Listesi</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Yeni Randevu</a>
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Üye</th>
+            <th>Antrenör</th>
+            <th>Hizmet</th>
+            <th>Tarih</th>
+            <th>Durum</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Uye.Ad @item.Uye.Soyad</td>
+                <td>@item.Antrenor.Ad @item.Antrenor.Soyad</td>
+                <td>@item.Hizmet.HizmetAdi</td>
+                <td>@item.Tarih</td>
+                <td>
+                    @switch (item.Durum)
+                    {
+                        case RandevuDurum.Onaylandi:
+                            <span class="text-success">Onaylandı</span>
+                            break;
+                        case RandevuDurum.IptalEdildi:
+                            <span class="text-danger">İptal</span>
+                            break;
+                        default:
+                            <span class="text-warning">Bekliyor</span>
+                            break;
+                    }
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

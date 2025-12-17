@@ -1,0 +1,37 @@
+﻿@model SporMerkeziIsletmesi.Models.Randevu
+
+@{
+    ViewData["Title"] = "Randevu Oluştur";
+}
+
+<h2>Randevu Oluştur</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label>Üye</label>
+        <select asp-for="UyeId" class="form-control"
+                asp-items="@(new SelectList(ViewBag.Uyeler, "UyeId", "Ad"))">
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Antrenör</label>
+        <select asp-for="AntrenorID" class="form-control"
+                asp-items="@(new SelectList(ViewBag.Antrenorler, "AntrenorID", "Ad"))">
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Hizmet</label>
+        <select asp-for="HizmetID" class="form-control"
+                asp-items="@(new SelectList(ViewBag.Hizmetler, "HizmetID", "HizmetAdi"))">
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Tarih</label>
+        <input asp-for="Tarih" type="datetime-local" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success mt-2">Kaydet</button>
+</form>
