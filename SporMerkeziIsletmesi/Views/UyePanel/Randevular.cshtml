@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Randevularım";
+}
+
+<h2>Randevularım</h2>
+
+<table class="table table-bordered" id="randevuTable">
+    <thead>
+        <tr>
+            <th>Antrenör</th>
+            <th>Hizmet</th>
+            <th>Tarih</th>
+            <th>Saat</th>
+            <th>Durum</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section Scripts {
+    <script>
+        fetch('/api/UyePanelApi/randevularim')
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.querySelector('#randevuTable tbody');
+                tbody.innerHTML = '';
+
+                data.forEach(r => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${r.antrenor}</td>
+                            <td>${r.hizmet}</td>
+                            <td>${r.tarih}</td>
+                            <td>${r.baslangic} - ${r.bitis}</td>
+                            <td>${r.durum}</td>
+                        </tr>
+                    `;
+                });
+            });
+    </script>
+}

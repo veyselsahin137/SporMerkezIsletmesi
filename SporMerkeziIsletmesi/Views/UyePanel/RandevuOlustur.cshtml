@@ -1,0 +1,42 @@
+﻿@model SporMerkeziIsletmesi.Models.Randevu
+
+@{
+    ViewData["Title"] = "Yeni Randevu Talebi";
+}
+
+<h2>Yeni Randevu Talebi</h2>
+
+<form asp-action="RandevuOlustur" method="post">
+    <div class="form-group">
+        <label>Antrenör</label>
+        <select asp-for="AntrenorID" class="form-control"
+                asp-items="@(new SelectList(ViewBag.Antrenorler, "AntrenorID", "Ad"))">
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Hizmet</label>
+        <select asp-for="HizmetID" class="form-control"
+                asp-items="@(new SelectList(ViewBag.Hizmetler, "HizmetID", "HizmetAdi"))">
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Tarih</label>
+        <input asp-for="Tarih" type="date" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Başlangıç Saati</label>
+        <input asp-for="BaslangicSaati" type="time" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Bitiş Saati</label>
+        <input asp-for="BitisSaati" type="time" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success mt-2">
+        Randevu Talep Et
+    </button>
+</form>
