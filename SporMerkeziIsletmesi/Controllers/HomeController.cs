@@ -1,14 +1,14 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using SporMerkeziIsletmesi.Models;
-using SporMerkeziIsletmesi.Data;   // ? DbContext için
+using SporMerkeziIsletmesi.Data;   
 
 namespace SporMerkeziIsletmesi.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _context;   // ? DbContext
+        private readonly ApplicationDbContext _context;   
 
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {

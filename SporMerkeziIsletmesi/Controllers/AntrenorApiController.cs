@@ -20,7 +20,7 @@ namespace SporMerkeziIsletmesi.Controllers
         // GET: api/AntrenorApi
         // Tüm antrenörleri JSON olarak döndürür
         [HttpGet]
-        [AllowAnonymous]   // İstersen bunu kaldırıp sadece login olanlara açabilirsin
+        [AllowAnonymous]   
         public async Task<IActionResult> GetAntrenorler()
         {
             var antrenorler = await _context.Antrenorler

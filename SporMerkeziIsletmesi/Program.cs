@@ -4,7 +4,7 @@ using SporMerkeziIsletmesi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ================== DATABASE / CONTEXT ==================
+//  DATABASE / CONTEXT 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
@@ -13,7 +13,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// ================== IDENTITY + ROL AYARLARI ==================
+//  IDENTITY + ROL AYARLARI 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
     // Mail onayı zorunlu olmasın, kolay test edin
@@ -29,14 +29,14 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     .AddRoles<IdentityRole>() // Admin / Uye gibi rolleri desteklesin
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-// 🔹 YapayZekaController içinde kullandığımız IHttpClientFactory için
+//  YapayZekaController içinde kullandığımız IHttpClientFactory için
 builder.Services.AddHttpClient();
 
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// ================== ROL + ADMIN KULLANICI SEED (BAŞLANGIÇ VERİSİ) ==================
+//  ROL + ADMIN KULLANICI SEED (BAŞLANGIÇ VERİSİ) 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -97,7 +97,7 @@ using (var scope = app.Services.CreateScope())
     await EnsureAdminUser("B211210382"); //  Veysel
 }
 
-// ================== HTTP PIPELINE ==================
+//  HTTP PIPELINE 
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();

@@ -25,9 +25,9 @@ namespace SporMerkeziIsletmesi.Controllers
             _userManager = userManager;
         }
 
-        // ===============================
+        
         // RANDEVULARIM
-        // ===============================
+        
         [HttpGet("randevularim")]
         public async Task<IActionResult> Randevularim()
         {
@@ -62,9 +62,9 @@ namespace SporMerkeziIsletmesi.Controllers
             return Ok(new { items });
         }
 
-        // ===============================
+        
         // HİZMET → ANTRENÖR
-        // ===============================
+        
         [HttpGet("hizmet/{hizmetId}/antrenorler")]
         public IActionResult HizmeteGoreAntrenorler(int hizmetId)
         {
@@ -87,9 +87,8 @@ namespace SporMerkeziIsletmesi.Controllers
             return Ok(sonuc);
         }
 
-        // ===============================
         // ANTRENÖR → BOŞ SLOT
-        // ===============================
+        
         [HttpGet("antrenor/{antrenorId}/bos-slotlar")]
         public async Task<IActionResult> BosSlotlar(int antrenorId, int hizmetId)
         {
@@ -141,9 +140,9 @@ namespace SporMerkeziIsletmesi.Controllers
             return Ok(slots);
         }
 
-        // ===============================
+        
         // YARDIMCI METOTLAR (API İÇİN)
-        // ===============================
+        
         private static string DurumText(RandevuDurum durum)
         {
             return durum switch

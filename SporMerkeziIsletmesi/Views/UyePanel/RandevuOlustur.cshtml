@@ -48,7 +48,7 @@
         const salonBilgi = document.getElementById("salonBilgi");
         const slotlarDiv = document.getElementById("slotlar");
 
-        // 1️⃣ Hizmet seçilince → Antrenörleri getir
+        // 1️ Hizmet seçilince → Antrenörleri getir
         hizmetSelect.addEventListener("change", () => {
             const hizmetId = hizmetSelect.value;
 
@@ -79,7 +79,7 @@
                 });
         });
 
-        // 2️⃣ Antrenör seçilince → Salon + Slotlar
+        // 2️ Antrenör seçilince → Salon + Slotlar
         antrenorSelect.addEventListener("change", () => {
             const antrenorId = antrenorSelect.value;
             const hizmetId = hizmetSelect.value;

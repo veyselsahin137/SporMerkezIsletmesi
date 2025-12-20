@@ -9,9 +9,9 @@ namespace SporMerkeziIsletmesi.Models
         [Key]
         public int Id { get; set; }
 
-        // ===============================
+        
         // ÜYE
-        // ===============================
+        
         [Required]
         [Display(Name = "Üye")]
         public int UyeId { get; set; }
@@ -19,9 +19,9 @@ namespace SporMerkeziIsletmesi.Models
         [ForeignKey(nameof(UyeId))]
         public Uye Uye { get; set; } = null!;
 
-        // ===============================
+        
         // ANTRENÖR
-        // ===============================
+        
         [Required]
         [Display(Name = "Antrenör")]
         public int AntrenorID { get; set; }
@@ -29,9 +29,9 @@ namespace SporMerkeziIsletmesi.Models
         [ForeignKey(nameof(AntrenorID))]
         public Antrenor Antrenor { get; set; } = null!;
 
-        // ===============================
+        
         // HİZMET
-        // ===============================
+        
         [Required]
         [Display(Name = "Hizmet")]
         public int HizmetID { get; set; }
@@ -39,9 +39,9 @@ namespace SporMerkeziIsletmesi.Models
         [ForeignKey(nameof(HizmetID))]
         public Hizmet Hizmet { get; set; } = null!;
 
-        // ===============================
+        
         // TARİH & SAAT
-        // ===============================
+        
         [Required]
         [Display(Name = "Randevu Tarihi")]
         [DataType(DataType.Date)]
@@ -55,16 +55,16 @@ namespace SporMerkeziIsletmesi.Models
         [Display(Name = "Bitiş Saati")]
         public TimeSpan BitisSaati { get; set; }
 
-        // ===============================
+        
         // DURUM
-        // ===============================
+       
         [Required]
         [Display(Name = "Durum")]
         public RandevuDurum Durum { get; set; } = RandevuDurum.Beklemede;
 
-        // ===============================
+        
         // METADATA
-        // ===============================
+        
         [Display(Name = "Oluşturulma Tarihi")]
         public DateTime OlusturmaTarihi { get; set; } = DateTime.Now;
     }

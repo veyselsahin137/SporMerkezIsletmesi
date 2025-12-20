@@ -23,9 +23,9 @@ namespace SporMerkeziIsletmesi.Controllers
 
         public IActionResult Randevular() => View();
 
-        // ===============================
+        
         // RANDEVU OLUŞTUR (GET)
-        // ===============================
+        
         public IActionResult RandevuOlustur()
         {
             ViewBag.Hizmetler = _context.Hizmetler
@@ -35,9 +35,9 @@ namespace SporMerkeziIsletmesi.Controllers
             return View();
         }
 
-        // ===============================
+        
         // RANDEVU OLUŞTUR (POST)
-        // ===============================
+        
         [HttpPost]
         public async Task<IActionResult> RandevuOlustur(int AntrenorID, int HizmetID, string SecilenSlot)
         {
@@ -68,9 +68,9 @@ namespace SporMerkeziIsletmesi.Controllers
             return RedirectToAction("Randevular");
         }
 
-        // ===============================
+        
         // PROFİL
-        // ===============================
+        
         public async Task<IActionResult> Profil()
         {
             var user = await _userManager.GetUserAsync(User);

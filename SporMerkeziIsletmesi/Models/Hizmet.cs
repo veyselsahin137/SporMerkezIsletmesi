@@ -4,7 +4,7 @@ namespace SporMerkeziIsletmesi.Models
 {
     public class Hizmet
     {
-        public int HizmetID { get; set; }   // Primary key
+        public int HizmetID { get; set; }   // PK
 
         [Required]
         [MaxLength(100)]
@@ -19,7 +19,7 @@ namespace SporMerkeziIsletmesi.Models
         [Range(0, 10000, ErrorMessage = "Ücret 0-10000 arası olmalıdır.")]
         public decimal Ucret { get; set; }
 
-        // ⭐ Hangi salonda veriliyor? (FK)
+        //  Hangi salonda veriliyor? (FK)
         [Display(Name = "Salon")]
         public int SalonID { get; set; }
 

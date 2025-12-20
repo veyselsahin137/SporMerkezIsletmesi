@@ -55,13 +55,12 @@ namespace SporMerkeziIsletmesi.Controllers
         }
 
         // POST: AntrenorMusaitlik/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,AntrenorID,Gun,BaslangicSaati,BitisSaati")] AntrenorMusaitlik antrenorMusaitlik)
         {
-            // 1️⃣ Önce çakışma var mı kontrol et
+            //  Önce çakışma var mı kontrol et
             var cakisiyorMu = _context.AntrenorMusaitlikler
                 .Any(m =>
                     m.AntrenorID == antrenorMusaitlik.AntrenorID &&
@@ -79,7 +78,7 @@ namespace SporMerkeziIsletmesi.Controllers
                 return View(antrenorMusaitlik);
             }
 
-            // 2️⃣ Model diğer validasyonlardan da geçtiyse kaydet
+            //  Model diğer validasyonlardan da geçtiyse kaydet
             if (ModelState.IsValid)
             {
                 _context.Add(antrenorMusaitlik);
@@ -110,8 +109,7 @@ namespace SporMerkeziIsletmesi.Controllers
         }
 
         // POST: AntrenorMusaitlik/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,AntrenorID,Gun,BaslangicSaati,BitisSaati")] AntrenorMusaitlik antrenorMusaitlik)

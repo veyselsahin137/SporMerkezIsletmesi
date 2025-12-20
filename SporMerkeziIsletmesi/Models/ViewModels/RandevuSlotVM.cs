@@ -13,6 +13,6 @@
         public string GunYazi { get; set; } = "";
         public string GunAdi { get; set; } = "";
         public string Etiket { get; set; } = "";
-        // Örn: "30.12.2025 Salı 13:00 - 14:00"
+        
     }
 }

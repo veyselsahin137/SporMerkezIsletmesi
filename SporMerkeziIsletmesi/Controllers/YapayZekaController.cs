@@ -8,7 +8,7 @@ using SporMerkeziIsletmesi.Models;
 
 namespace SporMerkeziIsletmesi.Controllers
 {
-    // ✅ Sadece giriş yapmış kullanıcılar (Admin + Üye) erişebilsin
+    //  Sadece giriş yapmış kullanıcılar (Admin + Üye) erişebilsin
     [Authorize]
     public class YapayZekaController : Controller
     {
@@ -74,7 +74,7 @@ hazırla. Çok teknik olma, sade ve uygulanabilir olsun.
             // Chat Completions isteği gövdesi
             var body = new
             {
-                model = "gpt-4.1-mini",   // hesabında açık olan bir model kullan
+                model = "gpt-4.1-mini",   
                 messages = new[]
                 {
                     new { role = "system", content = "Sen bir spor ve beslenme uzmanısın. Kısa, net ve uygulanabilir öneriler ver." },
