@@ -90,6 +90,12 @@
                                         </a>
                                     </li>
                                     <li>
+                                        <a class="dropdown-item" asp-controller="Uye" asp-action="Index">
+                                            Üye 
+                                        </a>
+                                    </li>
+                                    
+                                    <li>
                                         <a class="dropdown-item" asp-controller="Home" asp-action="RestApi">
                                             REST API
                                         </a>
@@ -97,6 +103,54 @@
                                 </ul>
                             </li>
                         }
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-light"
+                                   href="#"
+                                   id="uyePanelDropdown"
+                                   role="button"
+                                   data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    Üye Paneli
+                                </a>
+
+                                <ul class="dropdown-menu" aria-labelledby="uyePanelDropdown">
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-controller="UyePanel"
+                                           asp-action="Index">
+                                            Panelim
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-controller="UyePanel"
+                                           asp-action="Profil">
+                                            Profilim
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-controller="UyePanel"
+                                           asp-action="Randevular">
+                                            Randevularım
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item"
+                                           asp-controller="UyePanel"
+                                           asp-action="RandevuOlustur">
+                                            Randevu Oluştur
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+
                     </ul>
 
                     <partial name="_LoginPartial" />

@@ -4,38 +4,59 @@
 
 <h2>Randevularım</h2>
 
-<table class="table table-bordered" id="randevuTable">
+<table class="table table-bordered">
     <thead>
         <tr>
-            <th>Antrenör</th>
-            <th>Hizmet</th>
             <th>Tarih</th>
             <th>Saat</th>
+            <th>Antrenör</th>
+            <th>Hizmet</th>
             <th>Durum</th>
         </tr>
     </thead>
-    <tbody></tbody>
+    <tbody id="randevuBody">
+        <tr>
+            <td colspan="5">Yükleniyor...</td>
+        </tr>
+    </tbody>
 </table>
 
 @section Scripts {
     <script>
-        fetch('/api/UyePanelApi/randevularim')
-            .then(res => res.json())
-            .then(data => {
-                const tbody = document.querySelector('#randevuTable tbody');
-                tbody.innerHTML = '';
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("/api/UyePanelApi/randevularim")
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById("randevuBody");
+                    tbody.innerHTML = "";
 
-                data.forEach(r => {
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${r.antrenor}</td>
-                            <td>${r.hizmet}</td>
-                            <td>${r.tarih}</td>
-                            <td>${r.baslangic} - ${r.bitis}</td>
-                            <td>${r.durum}</td>
-                        </tr>
-                    `;
+                    if (!data.items || data.items.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="5">Henüz randevunuz yok.</td>
+                            </tr>`;
+                        return;
+                    }
+
+                    data.items.forEach(r => {
+                        const tarih = new Date(r.tarih).toLocaleDateString("tr-TR");
+                        const saat = `${r.baslangic} - ${r.bitis}`;
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${tarih}</td>
+                                <td>${saat}</td>
+                                <td>${r.antrenor}</td>
+                                <td>${r.hizmet}</td>
+                                <td>${r.durum}</td>
+                            </tr>`;
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById("randevuBody").innerHTML =
+                        "<tr><td colspan='5'>Hata oluştu</td></tr>";
                 });
-            });
+        });
     </script>
 }

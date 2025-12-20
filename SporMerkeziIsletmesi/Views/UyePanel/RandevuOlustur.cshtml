@@ -7,36 +7,122 @@
 <h2>Yeni Randevu Talebi</h2>
 
 <form asp-action="RandevuOlustur" method="post">
-    <div class="form-group">
-        <label>Antrenör</label>
-        <select asp-for="AntrenorID" class="form-control"
-                asp-items="@(new SelectList(ViewBag.Antrenorler, "AntrenorID", "Ad"))">
-        </select>
-    </div>
 
-    <div class="form-group">
+    <!-- HİZMET -->
+    <div class="form-group mb-3">
         <label>Hizmet</label>
-        <select asp-for="HizmetID" class="form-control"
-                asp-items="@(new SelectList(ViewBag.Hizmetler, "HizmetID", "HizmetAdi"))">
+        <select class="form-control" id="hizmetSelect" name="HizmetID">
+            <option value="">Hizmet Seç</option>
+            @foreach (var h in ViewBag.Hizmetler)
+            {
+                <option value="@h.HizmetID">
+                    @h.HizmetAdi (@h.SureDakika dk)
+                </option>
+            }
         </select>
     </div>
 
-    <div class="form-group">
-        <label>Tarih</label>
-        <input asp-for="Tarih" type="date" class="form-control" />
+    <!-- ANTRENÖR -->
+    <div class="form-group mb-3">
+        <label>Antrenör</label>
+        <select class="form-control" id="antrenorSelect" name="AntrenorID">
+            <option value="">Önce Hizmet Seçin</option>
+        </select>
     </div>
 
-    <div class="form-group">
-        <label>Başlangıç Saati</label>
-        <input asp-for="BaslangicSaati" type="time" class="form-control" />
-    </div>
+    <!-- SALON BİLGİ -->
+    <div id="salonBilgi" class="alert alert-info d-none"></div>
 
-    <div class="form-group">
-        <label>Bitiş Saati</label>
-        <input asp-for="BitisSaati" type="time" class="form-control" />
-    </div>
+    <!-- SLOT -->
+    <div id="slotlar" class="mt-3"></div>
 
-    <button type="submit" class="btn btn-success mt-2">
+    <button type="submit" class="btn btn-success mt-3">
         Randevu Talep Et
     </button>
 </form>
+
+@section Scripts {
+    <script>
+        const hizmetSelect = document.getElementById("hizmetSelect");
+        const antrenorSelect = document.getElementById("antrenorSelect");
+        const salonBilgi = document.getElementById("salonBilgi");
+        const slotlarDiv = document.getElementById("slotlar");
+
+        // 1️⃣ Hizmet seçilince → Antrenörleri getir
+        hizmetSelect.addEventListener("change", () => {
+            const hizmetId = hizmetSelect.value;
+
+            antrenorSelect.innerHTML = '<option value="">Yükleniyor...</option>';
+            salonBilgi.classList.add("d-none");
+            slotlarDiv.innerHTML = "";
+
+            if (!hizmetId) {
+                antrenorSelect.innerHTML = '<option value="">Önce Hizmet Seçin</option>';
+                return;
+            }
+
+            fetch(`/api/UyePanelApi/hizmet/${hizmetId}/antrenorler`)
+                .then(r => r.json())
+                .then(data => {
+                    antrenorSelect.innerHTML = '<option value="">Antrenör Seç</option>';
+
+                    data.forEach(a => {
+                        antrenorSelect.innerHTML += `
+                            <option value="${a.antrenorId}"
+                                    data-salon="${a.salonAdi}"
+                                    data-adres="${a.salonAdres}"
+                                    data-acilis="${a.acilis}"
+                                    data-kapanis="${a.kapanis}">
+                                ${a.adSoyad}
+                            </option>`;
+                    });
+                });
+        });
+
+        // 2️⃣ Antrenör seçilince → Salon + Slotlar
+        antrenorSelect.addEventListener("change", () => {
+            const antrenorId = antrenorSelect.value;
+            const hizmetId = hizmetSelect.value;
+
+            slotlarDiv.innerHTML = "";
+
+            if (!antrenorId || !hizmetId) return;
+
+            const opt = antrenorSelect.selectedOptions[0];
+
+            salonBilgi.innerHTML = `
+                <b>Salon:</b> ${opt.dataset.salon}<br/>
+                <b>Adres:</b> ${opt.dataset.adres}<br/>
+                <b>Açılış:</b> ${opt.dataset.acilis} - ${opt.dataset.kapanis}
+            `;
+            salonBilgi.classList.remove("d-none");
+
+            fetch(`/api/UyePanelApi/antrenor/${antrenorId}/bos-slotlar?hizmetId=${hizmetId}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.length === 0) {
+                        slotlarDiv.innerHTML = `<div class="alert alert-warning">
+                            Bu antrenör için uygun saat yok.
+                        </div>`;
+                        return;
+                    }
+
+                    slotlarDiv.innerHTML = `<h5>Müsait Saatler</h5>`;
+
+                    data.forEach((s, i) => {
+                        slotlarDiv.innerHTML += `
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       name="SecilenSlot"
+                                       required
+                                       value="${s.tarih}|${s.baslangic}|${s.bitis}">
+                                <label class="form-check-label">
+                                    ${s.gunYazi} – ${s.baslangic} / ${s.bitis}
+                                </label>
+                            </div>`;
+                    });
+                });
+        });
+    </script>
+}

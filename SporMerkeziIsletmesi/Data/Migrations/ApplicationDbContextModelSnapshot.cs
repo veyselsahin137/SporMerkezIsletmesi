@@ -258,7 +258,7 @@ namespace SporMerkeziIsletmesi.Data.Migrations
 
                     b.HasKey("AntrenorID");
 
-                    b.ToTable("Antrenorler");
+                    b.ToTable("Antrenorler", (string)null);
                 });
 
             modelBuilder.Entity("SporMerkeziIsletmesi.Models.AntrenorHizmet", b =>
@@ -281,7 +281,7 @@ namespace SporMerkeziIsletmesi.Data.Migrations
 
                     b.HasIndex("HizmetID");
 
-                    b.ToTable("AntrenorHizmetler");
+                    b.ToTable("AntrenorHizmetler", (string)null);
                 });
 
             modelBuilder.Entity("SporMerkeziIsletmesi.Models.AntrenorMusaitlik", b =>
@@ -310,7 +310,7 @@ namespace SporMerkeziIsletmesi.Data.Migrations
 
                     b.HasIndex("AntrenorID");
 
-                    b.ToTable("AntrenorMusaitlikler");
+                    b.ToTable("AntrenorMusaitlikler", (string)null);
                 });
 
             modelBuilder.Entity("SporMerkeziIsletmesi.Models.Hizmet", b =>
@@ -339,7 +339,7 @@ namespace SporMerkeziIsletmesi.Data.Migrations
 
                     b.HasIndex("SalonID");
 
-                    b.ToTable("Hizmetler");
+                    b.ToTable("Hizmetler", (string)null);
                 });
 
             modelBuilder.Entity("SporMerkeziIsletmesi.Models.Randevu", b =>
@@ -415,7 +415,7 @@ namespace SporMerkeziIsletmesi.Data.Migrations
 
                     b.HasKey("SalonID");
 
-                    b.ToTable("Salonlar");
+                    b.ToTable("Salonlar", (string)null);
                 });
 
             modelBuilder.Entity("SporMerkeziIsletmesi.Models.Uye", b =>

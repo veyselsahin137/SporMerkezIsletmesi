@@ -23,6 +23,8 @@ namespace SporMerkeziIsletmesi.Models
         [Required]
         [Display(Name = "Kapanış Saati")]
         public TimeSpan KapanisSaati { get; set; }
+
+        public ICollection<Hizmet> Hizmetler { get; set; } = new List<Hizmet>();
     }
 }
 

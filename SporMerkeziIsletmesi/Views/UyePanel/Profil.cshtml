@@ -6,21 +6,60 @@
 
 <h2>Profil Bilgilerim</h2>
 
-<table class="table">
+<table class=" table table-bordered">
     <tr>
         <th>Ad</th>
-        <td>@Model.Ad</td>
-    </tr>
-    <tr>
+
         <th>Soyad</th>
-        <td>@Model.Soyad</td>
-    </tr>
-    <tr>
+        
         <th>Boy</th>
-        <td>@Model.Boy</td>
+        
+        <th>Kilo</th>
+        
     </tr>
     <tr>
-        <th>Kilo</th>
+        <td>@Model.Ad</td>
+
+        <td>@Model.Soyad</td>
+
+        <td>@Model.Boy</td>
+
         <td>@Model.Kilo</td>
     </tr>
 </table>
+
+<form asp-action="ProfilGuncelle" method="post">
+    <div class="form-group">
+        <label>Boy (cm)</label>
+        <input type="number" name="boy" class="form-control" value="@Model.Boy" />
+    </div>
+
+    <div class="form-group">
+        <label>Kilo (kg)</label>
+        <input type="number" name="kilo" class="form-control" value="@Model.Kilo" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">
+        Güncelle
+    </button>
+</form>
+
+
+
+@section Scripts {
+    <script>
+        function profilYukle() {
+            fetch('/api/UyePanelApi/profilim')
+                .then(r => r.json())
+                .then(d => {
+                    document.getElementById('icerik').innerHTML = `
+                        <h4>Profil Bilgilerim</h4>
+                        <p><b>Ad:</b> ${d.ad}</p>
+                        <p><b>Soyad:</b> ${d.soyad}</p>
+                        <p><b>Boy:</b> ${d.boy ?? '-'}</p>
+                        <p><b>Kilo:</b> ${d.kilo ?? '-'}</p>
+                    `;
+                });
+        }
+    </script>
+ }

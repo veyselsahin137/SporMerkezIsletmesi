@@ -1,0 +1,48 @@
+﻿@model IEnumerable<SporMerkeziIsletmesi.Models.Randevu>
+
+@{
+    ViewData["Title"] = "Randevu Yönetimi";
+}
+
+<h2>Randevu Yönetimi</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Üye</th>
+            <th>Antrenör</th>
+            <th>Hizmet</th>
+            <th>Tarih</th>
+            <th>Saat</th>
+            <th>Durum</th>
+            <th>İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.Uye.Ad @r.Uye.Soyad</td>
+                <td>@r.Antrenor.Ad @r.Antrenor.Soyad</td>
+                <td>@r.Hizmet.HizmetAdi</td>
+                <td>@r.Tarih.ToShortDateString()</td>
+                <td>@r.BaslangicSaati - @r.BitisSaati</td>
+                <td>@r.Durum</td>
+                <td>
+                    @if (r.Durum == RandevuDurum.Beklemede)
+                    {
+                        <form asp-action="Onayla" method="post" style="display:inline">
+                            <input type="hidden" name="id" value="@r.Id" />
+                            <button class="btn btn-success btn-sm">Onayla</button>
+                        </form>
+
+                        <form asp-action="Reddet" method="post" style="display:inline">
+                            <input type="hidden" name="id" value="@r.Id" />
+                            <button class="btn btn-danger btn-sm">Reddet</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

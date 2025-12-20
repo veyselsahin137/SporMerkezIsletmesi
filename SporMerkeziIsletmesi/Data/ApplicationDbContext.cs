@@ -26,36 +26,33 @@ namespace SporMerkeziIsletmesi.Data
         {
             base.OnModelCreating(builder);
 
-            // === UYE ===
-            builder.Entity<Uye>(entity =>
-            {
-                entity.ToTable("Uyeler");
+            builder.Entity<Randevu>()
+                .HasOne(r => r.Uye)
+                .WithMany(u => u.Randevular)
+                .HasForeignKey(r => r.UyeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-                // AspNetUsers.Id = nvarchar(450) => FK alanı da 450 olmalı
-                entity.Property(u => u.IdentityUserId)
-                      .IsRequired()
-                      .HasMaxLength(450);
+            builder.Entity<Randevu>()
+                .HasOne(r => r.Antrenor)
+                .WithMany()
+                .HasForeignKey(r => r.AntrenorID)
+                .OnDelete(DeleteBehavior.Restrict);
 
-                // Navigation yok (modelde IdentityUser property yok) -> generic HasOne ile kur
-                entity.HasOne<IdentityUser>()
-                      .WithMany()
-                      .HasForeignKey(u => u.IdentityUserId)
-                      .OnDelete(DeleteBehavior.Cascade);
-            });
+            builder.Entity<Randevu>()
+                .HasOne(r => r.Hizmet)
+                .WithMany()
+                .HasForeignKey(r => r.HizmetID)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // === RANDEVU ===
-            builder.Entity<Randevu>(entity =>
-            {
-                entity.ToTable("Randevular");
+            builder.Entity<Hizmet>()
+                .HasOne(h => h.Salon)
+                .WithMany(s => s.Hizmetler)
+                .HasForeignKey(h => h.SalonID)
+                .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(r => r.Uye)
-                      .WithMany() // Uye içinde Randevular koleksiyonu yoksa böyle kalmalı
-                      .HasForeignKey(r => r.UyeId)
-                      .OnDelete(DeleteBehavior.Restrict);
-            });
+
+
 
         }
-
-
     }
 }
